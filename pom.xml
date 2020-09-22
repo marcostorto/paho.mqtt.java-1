@@ -4,7 +4,7 @@
 	<groupId>org.eclipse.paho</groupId>
 	<artifactId>java-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.5</version>
+	<version>1.2.5.1</version>
 
     <properties>
         <!-- source & target java version for MQTT Client -->
@@ -65,7 +65,7 @@
             <connection>scm:git:git@github.com:eclipse/paho.mqtt.java.git</connection>
     </scm>
 
-    <distributionManagement>
+<!--    <distributionManagement>
         <repository>
             <id>repo.eclipse.org</id>
             <name>Paho Repository - Releases</name>
@@ -75,6 +75,19 @@
             <id>repo.eclipse.org</id>
             <name>Paho Repository - Snapshots</name>
             <url>https://repo.eclipse.org/content/repositories/paho-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>-->
+
+    <distributionManagement>
+        <repository>
+            <id>maven-releases</id>
+            <name>Maven Repository - Releases</name>
+            <url>http://repo02.tecniplastgroup.com:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <name>Maven Repository - Snapshots</name>
+            <url>http://repo02.tecniplastgroup.com:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -148,7 +161,7 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.8.2</version>
                     <configuration>
-                        <deployAtEnd>true</deployAtEnd>
+                        <deployAtEnd>false</deployAtEnd>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -222,30 +235,6 @@
                     </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <!--
-                    Use the Nexus Staging plugin as a full replacement for the standard
-                    Maven Deploy plugin.
-                    See https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin
-                    why this makes sense :-)
-                    We can control whether we want to deploy to the Eclipse repo or Maven Central
-                    by a combination of the version being a SNAPHOT or release version and property
-                    skipStaging=true/false.
-                    In any case we can take advantage of the plugin's "deferred deploy" feature which
-                    makes sure that all artifacts of a multi-module project are deployed as a whole
-                    at the end of the build process instead of deploying each module's artifacts
-                    individually as part of building the module.
-                 -->
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.5</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
-                </configuration>
             </plugin>
         </plugins>
     </build>

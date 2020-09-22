@@ -18,6 +18,8 @@
  */
 package org.eclipse.paho.client.mqttv3.internal;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -303,14 +305,27 @@ public class CommsCallback implements Runnable {
 				log.fine(CLASS_NAME, methodName, "708", new Object[] { cause });
 				mqttCallback.connectionLost(cause);
 			}
-			if(reconnectInternalCallback != null && cause != null){
-				reconnectInternalCallback.connectionLost(cause);
-			}
 		} catch (java.lang.Throwable t) {
 			// Just log the fact that a throwable has caught connection lost 
 			// is called during shutdown processing so no need to do anything else
 			// @TRACE 720=exception from connectionLost {0}
 			log.fine(CLASS_NAME, methodName, "720", new Object[] { t });
+			StringWriter sw = new StringWriter();
+			t.printStackTrace(new PrintWriter(sw));
+			log.fine(CLASS_NAME, methodName, sw.toString());
+		}
+		try {
+			if(reconnectInternalCallback != null && cause != null){
+				reconnectInternalCallback.connectionLost(cause);
+			}
+		} catch (java.lang.Throwable t) {
+			// Just log the fact that a throwable has caught connection lost
+			// is called during shutdown processing so no need to do anything else
+			// @TRACE 720=exception from connectionLost {0}
+			log.severe(CLASS_NAME, methodName, "721", new Object[] { t });
+			StringWriter sw = new StringWriter();
+			t.printStackTrace(new PrintWriter(sw));
+			log.severe(CLASS_NAME, methodName, sw.toString());
 		}
 	}
 
